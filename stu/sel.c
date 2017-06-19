@@ -53,7 +53,7 @@ int cgiMain()
 	}
 
 	//连接数据库
-	db = mysql_real_connect(db, "127.0.0.1", "root", "1", "studb",  3306, NULL, 0);
+	db = mysql_real_connect(db, "127.0.0.1", "root", "123456", "stu",  3306, NULL, 0);
 	if (db == NULL)
 	{
 		fprintf(cgiOut,"mysql_real_connect fail:%s\n", mysql_error(db));
@@ -66,7 +66,7 @@ int cgiMain()
 	{
 		fprintf(cgiOut,"mysql_real_query fail:%s\n", mysql_error(db));
 		mysql_close(db);
-		return ;
+		return -1;
 	}
 
 	MYSQL_RES *res;
@@ -74,7 +74,7 @@ int cgiMain()
 	if (res == NULL)
 	{
 		fprintf(cgiOut,"mysql_store_result fail:%s\n", mysql_error(db));
-		return ;
+		return -1;
 	}
 
 	fprintf(cgiOut, "<div class=\"container\"> <h1 class=\"text-center\">查询结果</h1>");
