@@ -22,7 +22,7 @@ int cgiMain()
 		    <link rel=\"stylesheet\" href=\"/stu/public/css/bootstrap.min.css\">\
 		</head>");
 
-	char name[32] = "\0";
+	char sno[32] = "\0";
 	int status = 0;
 	char ch;
 
@@ -39,7 +39,7 @@ int cgiMain()
 		}
 		fclose(fd);
 
-	status = cgiFormString("name",  name, 32);
+	status = cgiFormString("sno",  sno, 32);
 	if (status != cgiFormSuccess)
 	{
 		fprintf(cgiOut, "get name error!\n");
@@ -50,13 +50,13 @@ int cgiMain()
 	MYSQL *db;
 	char sql[128] = "\0";
 
-	if (name[0] == '*')
+	if (sno[0] == '*')
 	{
 		sprintf(sql, "select * from information where sel=0");
 	}
 	else
 	{
-		sprintf(sql, "select * from information where name = '%s' and sel=0", name);
+		sprintf(sql, "select * from information where sno = '%s' and sel=0", sno);
 	}
 
 
