@@ -9,35 +9,35 @@ int cgiMain()
 
 	fprintf(cgiOut, "Content-type:text/html;charset=utf-8\n\n");
 
+  char sno[32] = "\0";
 	char name[32] = "\0";
-	char age[16] = "\0";
-	char stuId[32] = "\0";
+	char sex[4] = "\0";
 	int status = 0;
 
-	status = cgiFormString("name",  name, 32);
+	status = cgiFormString("name",name, 32);
 	if (status != cgiFormSuccess)
 	{
 		fprintf(cgiOut, "get name error!\n");
 		return 1;
 	}
 
-	status = cgiFormString("age",  age, 16);
+	status = cgiFormString("sex",sex, 4);
 	if (status != cgiFormSuccess)
 	{
-		fprintf(cgiOut, "get age error!\n");
+		fprintf(cgiOut, "get sex error!\n");
 		return 1;
 	}
 
-	status = cgiFormString("stuId",  stuId, 32);
+	status = cgiFormString("sno",sno, 32);
 	if (status != cgiFormSuccess)
 	{
-		fprintf(cgiOut, "get stuId error!\n");
+		fprintf(cgiOut, "get sno error!\n");
 		return 1;
 	}
 
 	//fprintf(cgiOut, "name = %s, age = %s, stuId = %s\n", name, age, stuId);
 
-	int ret;
+	//int ret;
 	char sql[128] = "\0";
 	MYSQL *db;
 
@@ -60,7 +60,7 @@ int cgiMain()
 
 
 
-	strcpy(sql, "create table stu(id int not null primary key, name varchar(20) not null, age int not null)");
+	/*strcpy(sql, "create table stu(id int not null primary key, name varchar(20) not null, age int not null)");
 	if ((ret = mysql_real_query(db, sql, strlen(sql) + 1)) != 0)
 	{
 		if (ret != 1)
@@ -69,11 +69,12 @@ int cgiMain()
 			mysql_close(db);
 			return -1;
 		}
-	}
+	}*/
 
 
-
-	sprintf(sql, "insert into stu values(%d, '%s', %d)", atoi(stuId), name, atoi(age));
+    fprintf(cgiOut,"insert into information(sno,name,sex)  values(%d,'%s','%s')",atoi(sno),name,sex);
+		mysql_query(db, "set character set utf8");
+	sprintf(sql, "insert into information(sno,name,sex)  values(%d,'%s','%s')",atoi(sno),name,sex);
 	if (mysql_real_query(db, sql, strlen(sql) + 1) != 0)
 	{
 		fprintf(cgiOut, "%s\n", mysql_error(db));
