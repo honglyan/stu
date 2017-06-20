@@ -5,6 +5,8 @@
 #include <mysql/mysql.h>
 #include "cgic.h"
 
+char * headname = "head.html";
+char * footname = "footer.html";
 
 int cgiMain()
 {
@@ -22,6 +24,20 @@ int cgiMain()
 
 	char name[32] = "\0";
 	int status = 0;
+	char ch;
+
+	FILE * fd;
+		if(!(fd = fopen(headname, "r"))){
+			fprintf(cgiOut, "Cannot open file, %s\n", headname);
+			return -1;
+		}
+		ch = fgetc(fd);
+
+		while(ch != EOF){
+			fprintf(cgiOut, "%c", ch);
+			ch = fgetc(fd);
+		}
+		fclose(fd);
 
 	status = cgiFormString("name",  name, 32);
 	if (status != cgiFormSuccess)
@@ -88,7 +104,7 @@ int cgiMain()
 
 	MYSQL_FIELD *mysql_filed;
 	mysql_filed = mysql_fetch_fields(res);
-	for (i = 0; i < fields ; i++)
+	for (i = 0; i < fields-1 ; i++)
 	{
 		fprintf(cgiOut, "<th>%s</th>", mysql_filed[i].name);
 	}
@@ -102,7 +118,7 @@ int cgiMain()
 	{
 		fprintf(cgiOut,"<tr>");
 		len = mysql_fetch_lengths(res);
-		for (i = 0; i < fields ; i++)
+		for (i = 0; i < fields-1; i++)
 		{
 			fprintf(cgiOut,"<td>%.*s</td>", (int)len[i], row[i]);
 		}

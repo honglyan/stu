@@ -4,6 +4,9 @@
 #include <mysql/mysql.h>
 #include "cgic.h"
 
+char * headname = "head.html";
+char * footname = "footer.html";
+
 int cgiMain()
 {
 
@@ -14,6 +17,22 @@ int cgiMain()
 	char birthday[12]= "\0";
 	char sid[10] ="\0";
 	int status = 0;
+	char ch;
+
+	FILE * fd;
+		fprintf(cgiOut, "Content-type:text/html;charset=utf-8\n\n");
+		if(!(fd = fopen(headname, "r"))){
+			fprintf(cgiOut, "Cannot open file, %s\n", headname);
+			return -1;
+		}
+		ch = fgetc(fd);
+
+		while(ch != EOF){
+			fprintf(cgiOut, "%c", ch);
+			ch = fgetc(fd);
+		}
+		fclose(fd);
+
 
 	status = cgiFormString("name",  name, 32);
 	if (status != cgiFormSuccess)
@@ -67,7 +86,7 @@ int cgiMain()
 		return -1;
 	}
   //fprintf(cgiOut,"update information set name='%s',birthday='%s',sid=%d where sno=%d ", name,birthday,atoi(sid),atoi(sno));
-	sprintf(sql, "update information set name='%s',birthday='%s',sid=%d where sno=%d ", name,birthday,atoi(sid),atoi(sno));
+	sprintf(sql, "update information set name='%s',birthday='%s',sid=%d where sno='%s' ", name,birthday,atoi(sid),sno);
 	if ((ret = mysql_real_query(db, sql, strlen(sql) + 1)) != 0)
 	{
 		fprintf(cgiOut,"mysql_real_query fail:%s\n", mysql_error(db));

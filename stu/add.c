@@ -4,17 +4,33 @@
 #include <mysql/mysql.h>
 #include "cgic.h"
 
+
+char * headname = "head.html";
+char * footname = "footer.html";
+
 int cgiMain()
 {
-
-	fprintf(cgiOut, "Content-type:text/html;charset=utf-8\n\n");
-
   char sno[32] = "\0";
 	char name[32] = "\0";
 	char sex[4] = "\0";
 	char birthday[12]= "\0";
 	char sid[10] ="\0";
 	int status = 0;
+	char ch;
+
+	FILE * fd;
+		fprintf(cgiOut, "Content-type:text/html;charset=utf-8\n\n");
+		if(!(fd = fopen(headname, "r"))){
+			fprintf(cgiOut, "Cannot open file, %s\n", headname);
+			return -1;
+		}
+		ch = fgetc(fd);
+
+		while(ch != EOF){
+			fprintf(cgiOut, "%c", ch);
+			ch = fgetc(fd);
+		}
+		fclose(fd);
 
 	status = cgiFormString("name",name, 32);
 	if (status != cgiFormSuccess)
@@ -91,7 +107,7 @@ int cgiMain()
 
     //fprintf(cgiOut,"insert into information(sno,name,sex,birthday,sid)  values(%d,'%s','%s','%s',%d)",atoi(sno),name,sex,birthday,atoi(sid));
 		mysql_query(db, "set character set utf8");
-	sprintf(sql, "insert into information(sno,name,sex,birthday,sid)  values(%d,'%s','%s','%s',%d)",atoi(sno),name,sex,birthday,atoi(sid));
+	sprintf(sql, "insert into information(sno,name,sex,birthday,sid)  values('%s','%s','%s','%s',%d)",sno,name,sex,birthday,atoi(sid));
 	if (mysql_real_query(db, sql, strlen(sql) + 1) != 0)
 	{
 		fprintf(cgiOut, "%s\n", mysql_error(db));
