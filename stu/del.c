@@ -8,15 +8,15 @@ int cgiMain()
 {
 
 	fprintf(cgiOut, "Content-type:text/html;charset=utf-8\n\n");
-	
-	char stuId[32] = "\0";
+
+	char sno[32] = "\0";
 	int status = 0;
 
 
-	status = cgiFormString("stuId",  stuId, 32);
+	status = cgiFormString("sno",  sno, 32);
 	if (status != cgiFormSuccess)
 	{
-		fprintf(cgiOut, "get stuId error!\n");
+		fprintf(cgiOut, "get sno error!\n");
 		return 1;
 	}
 
@@ -43,7 +43,7 @@ int cgiMain()
 	}
 
 
-	sprintf(sql, "delete from stu where id = %d", atoi(stuId));
+	sprintf(sql, "update  information set sel=1 where sno = %d", atoi(sno));
 	if ((ret = mysql_real_query(db, sql, strlen(sql) + 1)) != 0)
 	{
 		fprintf(cgiOut,"mysql_real_query fail:%s\n", mysql_error(db));

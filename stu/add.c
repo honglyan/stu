@@ -54,7 +54,7 @@ int cgiMain()
 	//fprintf(cgiOut, "name = %s, age = %s, stuId = %s\n", name, age, stuId);
 
 	//int ret;
-	char sql[128] = "\0";
+	char sql[500] = "\0";
 	MYSQL *db;
 
 	//初始化
@@ -76,7 +76,9 @@ int cgiMain()
 
 
 
-	/*strcpy(sql, "create table stu(id int not null primary key, name varchar(20) not null, age int not null)");
+	/*strcpy(sql, "create table information(sno int(4) primary key check(sno>0),
+  name varchar(8) not null,sex char(5)not null,birthday date default '1990-1-1',sel int default '0',sid int(4),
+  foreign key(sid) references school(sid))default CHARSET=utf8");
 	if ((ret = mysql_real_query(db, sql, strlen(sql) + 1)) != 0)
 	{
 		if (ret != 1)
