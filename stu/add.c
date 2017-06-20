@@ -12,6 +12,8 @@ int cgiMain()
   char sno[32] = "\0";
 	char name[32] = "\0";
 	char sex[4] = "\0";
+	char birthday[12]= "\0";
+	char sid[10] ="\0";
 	int status = 0;
 
 	status = cgiFormString("name",name, 32);
@@ -32,6 +34,20 @@ int cgiMain()
 	if (status != cgiFormSuccess)
 	{
 		fprintf(cgiOut, "get sno error!\n");
+		return 1;
+	}
+
+	status = cgiFormString("birthday",birthday, 12);
+	if (status != cgiFormSuccess)
+	{
+		fprintf(cgiOut, "get date error!\n");
+		return 1;
+	}
+
+	status = cgiFormString("sid",sid, 32);
+	if (status != cgiFormSuccess)
+	{
+		fprintf(cgiOut, "get sid error!\n");
 		return 1;
 	}
 
@@ -72,9 +88,9 @@ int cgiMain()
 	}*/
 
 
-    fprintf(cgiOut,"insert into information(sno,name,sex)  values(%d,'%s','%s')",atoi(sno),name,sex);
+    fprintf(cgiOut,"insert into information(sno,name,sex,birthday,sid)  values(%d,'%s','%s','%s',%d)",atoi(sno),name,sex,birthday,atoi(sid));
 		mysql_query(db, "set character set utf8");
-	sprintf(sql, "insert into information(sno,name,sex)  values(%d,'%s','%s')",atoi(sno),name,sex);
+	sprintf(sql, "insert into information(sno,name,sex,birthday,sid)  values(%d,'%s','%s','%s',%d)",atoi(sno),name,sex,birthday,atoi(sid));
 	if (mysql_real_query(db, sql, strlen(sql) + 1) != 0)
 	{
 		fprintf(cgiOut, "%s\n", mysql_error(db));
