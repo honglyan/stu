@@ -40,7 +40,7 @@ int cgiMain()
 	status = cgiFormString("birthday",birthday, 12);
 	if (status != cgiFormSuccess)
 	{
-		fprintf(cgiOut, "get date error!\n");
+		fprintf(cgiOut, "get birthday error!\n");
 		return 1;
 	}
 
@@ -87,8 +87,7 @@ int cgiMain()
 		}
 	}*/
 
-
-    fprintf(cgiOut,"insert into information(sno,name,sex,birthday,sid)  values(%d,'%s','%s','%s',%d)",atoi(sno),name,sex,birthday,atoi(sid));
+    //fprintf(cgiOut,"insert into information(sno,name,sex,birthday,sid)  values(%d,'%s','%s','%s',%d)",atoi(sno),name,sex,birthday,atoi(sid));
 		mysql_query(db, "set character set utf8");
 	sprintf(sql, "insert into information(sno,name,sex,birthday,sid)  values(%d,'%s','%s','%s',%d)",atoi(sno),name,sex,birthday,atoi(sid));
 	if (mysql_real_query(db, sql, strlen(sql) + 1) != 0)

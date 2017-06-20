@@ -9,9 +9,10 @@ int cgiMain()
 
 	fprintf(cgiOut, "Content-type:text/html;charset=utf-8\n\n");
 
+	char sno[32] = "\0";
 	char name[32] = "\0";
-	char age[16] = "\0";
-	char stuId[32] = "\0";
+	char birthday[12]= "\0";
+	char sid[10] ="\0";
 	int status = 0;
 
 	status = cgiFormString("name",  name, 32);
@@ -21,20 +22,27 @@ int cgiMain()
 		return 1;
 	}
 
-	status = cgiFormString("age",  age, 16);
+
+	status = cgiFormString("sno",  sno, 32);
 	if (status != cgiFormSuccess)
 	{
-		fprintf(cgiOut, "get age error!\n");
+		fprintf(cgiOut, "get sno error!\n");
 		return 1;
 	}
 
-	status = cgiFormString("stuId",  stuId, 32);
+	status = cgiFormString("birthday",birthday, 12);
 	if (status != cgiFormSuccess)
 	{
-		fprintf(cgiOut, "get stuId error!\n");
+		fprintf(cgiOut, "get birthday error!\n");
 		return 1;
 	}
 
+	status = cgiFormString("sid",sid, 10);
+	if (status != cgiFormSuccess)
+	{
+		fprintf(cgiOut, "get sid error!\n");
+		return 1;
+	}
 	//fprintf(cgiOut, "name = %s, age = %s, stuId = %s\n", name, age, stuId);
 
 	int ret;
@@ -43,6 +51,7 @@ int cgiMain()
 
 	//初始化
 	db = mysql_init(NULL);
+	mysql_options(db, MYSQL_SET_CHARSET_NAME, "utf8");
 	if (db == NULL)
 	{
 		fprintf(cgiOut,"mysql_init fail:%s\n", mysql_error(db));
@@ -57,9 +66,8 @@ int cgiMain()
 		mysql_close(db);
 		return -1;
 	}
-
-
-	sprintf(sql, "update stu set name='%s', age= %d where id = %d ", name, atoi(age), atoi(stuId));
+  //fprintf(cgiOut,"update information set name='%s',birthday='%s',sid=%d where sno=%d ", name,birthday,atoi(sid),atoi(sno));
+	sprintf(sql, "update information set name='%s',birthday='%s',sid=%d where sno=%d ", name,birthday,atoi(sid),atoi(sno));
 	if ((ret = mysql_real_query(db, sql, strlen(sql) + 1)) != 0)
 	{
 		fprintf(cgiOut,"mysql_real_query fail:%s\n", mysql_error(db));
