@@ -12,17 +12,11 @@ int cgiMain()
 {
 
 	fprintf(cgiOut, "Content-type:text/html;charset=utf-8\n\n");
-/*	fprintf(cgiOut, "<head><meta charset=\"utf-8\"/><title>查询结果</title>\
-			<style>table {width:400px; margin: 50px auto; border: 1px solid gray; border-collapse: collapse; border-spacing: none; text-align:center;}\
-			tr,td,th{border: 1px solid gray;}\
-			</style>\
-			</head>");*/
 
 	fprintf(cgiOut, "<head><meta charset=\"utf-8\"><title>查询结果</title>\
 		    <link rel=\"stylesheet\" href=\"/stu/public/css/bootstrap.min.css\">\
 		</head>");
 
-	char sno[32] = "\0";
 	char cno[32] = "\0";
 	int status = 0;
 	char ch;
@@ -40,31 +34,26 @@ int cgiMain()
 		}
 		fclose(fd);
 
-	status = cgiFormString("sno",  sno, 32);
-	if (status != cgiFormSuccess)
-	{
-		fprintf(cgiOut, "get sno error!\n");
-		return 1;
-	}
-
 	status = cgiFormString("cno",  cno, 32);
 	if (status != cgiFormSuccess)
 	{
-		fprintf(cgiOut, "get cno error!\n");
+		fprintf(cgiOut, "get name error!\n");
 		return 1;
 	}
 
 	int ret;
 	MYSQL *db;
 	char sql[128] = "\0";
+	char sql1[128] = "\0";
 
 	if (cno[0] == '*')
 	{
-		sprintf(sql, "select sno,name,cno,cname,cirdet,cgrade from stuinfo where sno= '%s'",sno);
+		sprintf(sql, "select distinct cno,cname,cirdet from stuinfo ");
 	}
 	else
 	{
-		sprintf(sql, "select sno,name,cno,cname,cirdet,cgrade from stuinfo where sno = '%s' and cno= %d", sno,atoi(cno));
+		sprintf(sql, "select distinct cno,cname,cirdet from stuinfo where cno = '%s' ", cno);
+		sprintf(sql1, "select sno,name,cgrade from stuinfo where cno ='%s' ",cno);
 	}
 
 
@@ -133,6 +122,53 @@ int cgiMain()
 		fprintf(cgiOut,"</tr>");
 	}
 	fprintf(cgiOut,"</table></div>");
+//xin
+if (cno[0] != '*')
+{
+	if ((ret = mysql_real_query(db, sql1, strlen(sql1) + 1)) != 0)
+	{
+		fprintf(cgiOut,"mysql_real_query fail:%s\n", mysql_error(db));
+		mysql_close(db);
+		return -1;
+	}
+
+	res = mysql_store_result(db);
+	if (res == NULL)
+	{
+		fprintf(cgiOut,"mysql_store_result fail:%s\n", mysql_error(db));
+		return -1;
+	}
+
+	fprintf(cgiOut, "<div class=\"container\"> <h1 class=\"text-center\">选择该课程的学生信息</h1>");
+
+	fprintf(cgiOut,"<table class=\"table table-striped table-bordered\"><tr>");
+	int i = 0;
+
+	unsigned int fields;
+	fields = mysql_num_fields(res);
+
+	mysql_filed = mysql_fetch_fields(res);
+	for (i = 0; i < fields ; i++)
+	{
+		fprintf(cgiOut, "<th>%s</th>", mysql_filed[i].name);
+	}
+	fprintf(cgiOut,"</tr>");
+
+	//访问每一条记录的值
+
+	while ((row = mysql_fetch_row(res)) != NULL)
+	{
+		fprintf(cgiOut,"<tr>");
+		len = mysql_fetch_lengths(res);
+		for (i = 0; i < fields; i++)
+		{
+			fprintf(cgiOut,"<td>%.*s</td>", (int)len[i], row[i]);
+		}
+		fprintf(cgiOut,"</tr>");
+	}
+	fprintf(cgiOut,"</table></div>");
+}
+
 
 
 

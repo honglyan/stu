@@ -7,7 +7,7 @@
 
 char * headname = "head.html";
 char * footname = "footer.html";
-char * stu = "stu.html";
+char * tea = "teacher.html";
 int cgiMain()
 {
 
@@ -15,8 +15,8 @@ int cgiMain()
 	char ch;
 
 	FILE * fd;
-		if(!(fd = fopen(stu, "r"))){
-			fprintf(cgiOut, "Cannot open file, %s\n", stu);
+		if(!(fd = fopen(tea, "r"))){
+			fprintf(cgiOut, "Cannot open file, %s\n", tea);
 			return -1;
 		}
 		ch = fgetc(fd);

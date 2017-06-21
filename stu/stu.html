@@ -45,6 +45,9 @@
           <div class="text-center col-md-3 col-sm-6">
               <button>修改信息</button>
           </div>
+          <div class="text-center col-md-3 col-sm-6">
+              <button>选择课程</button>
+          </div>
       </div>
   </div>
   <ul class="forms">
@@ -59,7 +62,7 @@
               <div class="form-group">
                   <label for="cno" class="col-sm-2 control-label">请输入课程号</label>
                   <div class="col-sm-6">
-                      <input type="text" name="cno" class="form-control" id="cno" placeholder="输入*查询所有课程成绩">
+                      <input type="text" name="cno" class="form-control" id="cno" placeholder="输入*查询所有课程成绩,输入课程号查看课程信息及选修该课程的学生信息">
                   </div>
               </div>
               <div class="text-center">
@@ -101,7 +104,27 @@
                   <div class="col-sm-6">
                       <input type="text" name="birthday" class="form-control" id="birthday" placeholder="请输入出生日期xxxx-xx-xx">
                   </div>
-
+              </div>
+              <div class="text-center">
+                  <button type="submit" class="btn btn-success">提交</button>
+                  <button type="reset" class="btn btn-success">重置</button>
+              </div>
+          </form>
+      </li>
+      <li>
+          <form class="form-horizontal" method="get" action="/cgi-bin/sx/adds.cgi">
+              <div class="form-group">
+                  <label for="name-sel" class="col-sm-2 control-label">学生学号</label>
+                  <div class="col-sm-6">
+                      <input type="text" name="sno" class="form-control" id="sno" placeholder="请输入学生学号">
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label for="name-mod" class="col-sm-2 control-label">课程号</label>
+                  <div class="col-sm-6">
+                      <input type="text" name="cno" class="form-control" id="cno" placeholder="请输入选修的课程号">
+                  </div>
+              </div>
               <div class="text-center">
                   <button type="submit" class="btn btn-success">提交</button>
                   <button type="reset" class="btn btn-success">重置</button>
@@ -110,8 +133,8 @@
       </li>
   </ul>
 </div>
-<script src="./public/js/jquery-3.0.0.min.js"></script>
-<script src="./public/js/bootstrap.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 $(function() {
 
