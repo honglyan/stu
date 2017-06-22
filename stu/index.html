@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>学生信息管理系统</title>
-  <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+       <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <style type="text/css">
     body {
         height: 100%;
@@ -17,7 +17,7 @@
         margin-bottom: 50px;
     }
     .operation>div {
-        padding: 15px;
+        padding: 20px;
     }
     .operation.row .text-center button {
     	outline-style: none;
@@ -28,11 +28,15 @@
     .forms li button {
         margin-right: 30px;
     }
+    .form-horizontal .form-group{
+      margin-left: 100px;
+    }
     </style>
 </head>
 
 <body>
 <h1 class="header text-center">学生信息管理系统</h1>
+<h1 class="header text-center">登录界面</h1>
 <div class="text-center">
   <div class="container">
       <div class="operation row">
@@ -50,10 +54,9 @@
               <div class="form-group">
               <label for="sno" class="col-sm-2  control-label">学生学号</label>
                 <div class="col-sm-6">
-                      <input type="text" name="sno" class="form-control col-md-10" id="sno" placeholder="请输入学生学号">
+                      <input type="text" name="sno" class="form-control col-md-12 " id="sno" placeholder="请输入学生学号">
                   </div>
               </div>
-
               <div class="text-center">
                   <button type="submit" class="btn btn-success">登录</button>
                   <button type="reset" class="btn btn-success">重置</button>
