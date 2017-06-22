@@ -9,9 +9,6 @@ char * footname = "footer.html";
 
 int cgiMain()
 {
-
-	fprintf(cgiOut, "Content-type:text/html;charset=utf-8\n\n");
-
 	char sno[32] = "\0";
 	int status = 0;
 	char ch;
@@ -58,7 +55,25 @@ int cgiMain()
 		mysql_close(db);
 		return -1;
 	}
+	//查询是否有这个人的存在
+	sprintf(sql, "select * from information where sno=%s ", sno);
+	if ((ret = mysql_real_query(db, sql, strlen(sql) + 1)) != 0)
+	{
+		fprintf(cgiOut,"mysql_real_query fail:%s\n", mysql_error(db));
+		mysql_close(db);
+		return -1;
+	}
 
+	MYSQL_RES *res;
+	res = mysql_store_result(db);
+	if (res == NULL)
+	{
+		fprintf(cgiOut,"mysql_store_result fail:%s\n", mysql_error(db));
+		return -1;
+	}
+
+	 int num = (int)res->row_count;
+	 if(num){
 
 	sprintf(sql, "update  information set sel=1 where sno = '%s'", sno);
 	if ((ret = mysql_real_query(db, sql, strlen(sql) + 1)) != 0)
@@ -69,7 +84,10 @@ int cgiMain()
 	}
 
 
-	fprintf(cgiOut, "delete stu ok!\n");
+	fprintf(cgiOut, "<div class=\"container\"> <h1 class=\"text-center\">删除学生成功！</h1>");
+}else{
+	fprintf(cgiOut, "<div class=\"container\"> <h1 class=\"text-center\">该学生不存在！</h1>");
+}
 	mysql_close(db);
 
 	return 0;

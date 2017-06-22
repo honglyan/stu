@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <string.h>
 #include <mysql/mysql.h>
 #include "cgic.h"
 
@@ -12,21 +11,13 @@ int cgiMain()
 {
 
 	fprintf(cgiOut, "Content-type:text/html;charset=utf-8\n\n");
-/*	fprintf(cgiOut, "<head><meta charset=\"utf-8\"/><title>查询结果</title>\
-			<style>table {width:400px; margin: 50px auto; border: 1px solid gray; border-collapse: collapse; border-spacing: none; text-align:center;}\
-			tr,td,th{border: 1px solid gray;}\
-			</style>\
-			</head>");*/
-
-	fprintf(cgiOut, "<head><meta charset=\"utf-8\"><title>查询结果</title>\
-		    <link rel=\"stylesheet\" href=\"/stu/public/css/bootstrap.min.css\">\
-		</head>");
 
 	char sno[32] = "\0";
 	char cno[32] = "\0";
+	char cgrade[12]= "\0";
 	int status = 0;
 	char ch;
-
+//输出头网页head.html
 	FILE * fd;
 		if(!(fd = fopen(headname, "r"))){
 			fprintf(cgiOut, "Cannot open file, %s\n", headname);
@@ -40,6 +31,13 @@ int cgiMain()
 		}
 		fclose(fd);
 
+	status = cgiFormString("cno",  cno, 32);
+	if (status != cgiFormSuccess)
+	{
+		fprintf(cgiOut, "get name error!\n");
+		return 1;
+	}
+
 	status = cgiFormString("sno",  sno, 32);
 	if (status != cgiFormSuccess)
 	{
@@ -47,27 +45,16 @@ int cgiMain()
 		return 1;
 	}
 
-	status = cgiFormString("cno",  cno, 32);
+	status = cgiFormString("cgrade",cgrade, 12);
 	if (status != cgiFormSuccess)
 	{
-		fprintf(cgiOut, "get cno error!\n");
+		fprintf(cgiOut, "get birthday error!\n");
 		return 1;
 	}
 
 	int ret;
-	MYSQL *db;
 	char sql[128] = "\0";
-
-	if (cno[0] == '*')
-	{
-		sprintf(sql, "select sno,name,cno,cname,cirdet,cgrade from stuinfo where sno= '%s'",sno);
-	}
-	else
-	{
-		sprintf(sql, "select sno,name,cno,cname,cirdet,cgrade from stuinfo where sno = '%s' and cno= %d", sno,atoi(cno));
-	}
-
-
+	MYSQL *db;
 	//初始化
 	db = mysql_init(NULL);
 	mysql_options(db, MYSQL_SET_CHARSET_NAME, "utf8");
@@ -76,7 +63,7 @@ int cgiMain()
 		fprintf(cgiOut,"mysql_init fail:%s\n", mysql_error(db));
 		return -1;
 	}
- mysql_query(db, "set character set utf8");
+
 	//连接数据库
 	db = mysql_real_connect(db, "127.0.0.1", "root", "123456", "stu",  3306, NULL, 0);
 	if (db == NULL)
@@ -85,7 +72,7 @@ int cgiMain()
 		mysql_close(db);
 		return -1;
 	}
-
+	sprintf(sql, "update score set cgrade='%.2f' where cno='%s' and sno='%s' ", strtod (cgrade,NULL),cno,sno);
 
 	if ((ret = mysql_real_query(db, sql, strlen(sql) + 1)) != 0)
 	{
@@ -94,6 +81,17 @@ int cgiMain()
 		return -1;
 	}
 
+	fprintf(cgiOut, "<div class=\"container\"> <h1 class=\"text-center\">录入成绩成功！</h1>");
+	//输出录完成绩后的结果
+		char sql1[128] = "\0";
+		sprintf(sql1, "select  sno,name,cno,cname,cgrade from stuinfo where sno = '%s'", sno);
+
+	if ((ret = mysql_real_query(db, sql1, strlen(sql1) + 1)) != 0)
+	{
+		fprintf(cgiOut,"mysql_real_query fail:%s\n", mysql_error(db));
+		mysql_close(db);
+		return -1;
+	}
 	MYSQL_RES *res;
 	res = mysql_store_result(db);
 	if (res == NULL)
@@ -101,7 +99,8 @@ int cgiMain()
 		fprintf(cgiOut,"mysql_store_result fail:%s\n", mysql_error(db));
 		return -1;
 	}
-	fprintf(cgiOut, "<div class=\"container\"> <h1 class=\"text-center\">查询结果</h1>");
+
+	fprintf(cgiOut, "<div class=\"container\"> <h2 class=\"text-center\">该学生的选课信息</h2>");
 
 	fprintf(cgiOut,"<table class=\"table table-striped table-bordered\"><tr>");
 	int i = 0;
@@ -111,7 +110,6 @@ int cgiMain()
 
 	MYSQL_FIELD *mysql_filed;
 	mysql_filed = mysql_fetch_fields(res);
-
 	for (i = 0; i < fields ; i++)
 	{
 		fprintf(cgiOut, "<th>%s</th>", mysql_filed[i].name);
@@ -133,7 +131,6 @@ int cgiMain()
 		fprintf(cgiOut,"</tr>");
 	}
 	fprintf(cgiOut,"</table></div>");
-
 
 
 	mysql_close(db);

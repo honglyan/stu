@@ -10,7 +10,6 @@ char * footname = "footer.html";
 
 int cgiMain()
 {
-
 	fprintf(cgiOut, "Content-type:text/html;charset=utf-8\n\n");
 
 	fprintf(cgiOut, "<head><meta charset=\"utf-8\"><title>查询结果</title>\

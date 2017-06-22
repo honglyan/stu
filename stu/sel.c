@@ -47,11 +47,11 @@ int cgiMain()
 
 	if (sno[0] == '*')
 	{
-		sprintf(sql, "select distinct sno,name,sex,birthday,sname,sdept,smajor,sclass from stuinfo");
+		sprintf(sql, "select distinct sno,name,sex,birthday,sname,sdept,smajor,sclass from stuall");
 	}
 	else
 	{
-		sprintf(sql, "select distinct sno,name,sex,birthday,sname,sdept,smajor,sclass from stuinfo where sno = '%s'", sno);
+		sprintf(sql, "select distinct sno,name,sex,birthday,sname,sdept,smajor,sclass from stuall where sno = '%s'", sno);
 	}
 
 
